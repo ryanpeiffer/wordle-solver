@@ -16,3 +16,4 @@ Runtime is based on completing the full list of 2314 Wordles.
 |:---: | :---: | :---:| :---:| :---:|
 |v1|10.2 min|74.7%|4.6|initial build
 |v2|9.5 min|93.6%|4.2|add basic checking of imperfect letters
+|v3|9.0 min|98.6%|3.8|imperfect letters must be in different place

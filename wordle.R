@@ -56,12 +56,15 @@ revise_list <- function(word_list, word, word_score) {
                                   paste0("[^",paste(wrong_letters, collapse = ''),"]"),
                                   "[a-z]")
     check_regex <- paste(ifelse(word_score == 2, word_letters, wrong_letters_regex), collapse = '')
+    imperfect_regex <- paste(ifelse(word_score == 1, paste0('[^',word_letters,']'), '[a-z]'), collapse = '')
     imperfect_letters <- unique(word_letters[word_score == 1])
     
-    #filter for wrong and right letters with one handy regex 
+    #filter for wrong and right letters with one handy regex
+    #also filter that the imperfect letters won't be repeated in the same location
     filtered_list <- grep(check_regex, word_list, value = TRUE)
+    filtered_list <- grep(imperfect_regex, filtered_list, value = TRUE)
 
-    #ugly way of handling the imperfect letters, as I can't find a regex way to solve at once
+    #make sure remaining words have the imperfect letters in them
     for(letter in imperfect_letters) {
         filtered_list <- grep(letter, filtered_list, value = TRUE)
     }
@@ -155,7 +158,7 @@ avg_guesses <- win_tally %>%
 avg_guess <- sum(avg_guesses$sumprod) / sum(avg_guesses$percent)
 
 ### display results
-print(paste0(length(wordle_play_list), " wordles completed"))
-print(t2 - t1)
+print(paste0(length(results$target), " wordles completed"))
+ print(t2 - t1)
 win_tally
 round(avg_guess,2)
