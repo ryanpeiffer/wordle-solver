@@ -56,7 +56,7 @@ revise_list <- function(word_list, word, word_score) {
                                   paste0("[^",paste(wrong_letters, collapse = ''),"]"),
                                   "[a-z]")
     check_regex <- paste(ifelse(word_score == 2, word_letters, wrong_letters_regex), collapse = '')
-    imperfect_letters <- word_letters[word_score == 1]
+    imperfect_letters <- unique(word_letters[word_score == 1])
     
     #filter for wrong and right letters with one handy regex 
     filtered_list <- grep(check_regex, word_list, value = TRUE)
@@ -94,7 +94,7 @@ play_wordle <- function(correct_word) {
         }
         
         #not sure if this is awesome logic, but will guess from only the wordle list once at round 3
-        if(guess > 2) {
+        if(guess > 2 | length(guess_list) == 0) {
             guessed_word <- find_best_word(wordle_list, letter_rankings)
         } else {
             guessed_word <- find_best_word(guess_list, letter_rankings)

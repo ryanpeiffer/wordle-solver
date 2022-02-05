@@ -15,4 +15,4 @@ Runtime is based on completing the full list of 2314 Wordles.
 |algorithm |runtime |solve % |avg guesses |description
 |:---: | :---: | :---:| :---:| :---:|
 |v1|6.2 min|80.7%|4.56|initial build
-|v2|5.7 min|95.9%|4.12|add filtering of imperfect letters
+|v2|9.5 min|93.6%|4.2|add basic checking of imperfect letters
