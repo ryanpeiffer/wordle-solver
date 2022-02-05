@@ -56,11 +56,18 @@ revise_list <- function(word_list, word, word_score) {
                                   paste0("[^",paste(wrong_letters, collapse = ''),"]"),
                                   "[a-z]")
     check_regex <- paste(ifelse(word_score == 2, word_letters, wrong_letters_regex), collapse = '')
-    imperfect_letters_regex <- paste0("[",paste(word_letters[word_score == 1], collapse = ''),"]")
+    imperfect_letters <- word_letters[word_score == 1]
+    
+    #filter for wrong and right letters with one handy regex 
+    filtered_list <- grep(check_regex, word_list, value = TRUE)
 
-    filtered_list_1 <- grep(check_regex, word_list, value = TRUE) #filter for wrong and right letters
-    #filtered_list_2 <- grep() #filter for the imperfect letters TODO figure out regex for this
-    final_list <- filtered_list_1[filtered_list_1 != word] #remove the actual guessed word if it's still in the list
+    #ugly way of handling the imperfect letters, as I can't find a regex way to solve at once
+    for(letter in imperfect_letters) {
+        filtered_list <- grep(letter, filtered_list, value = TRUE)
+    }
+    
+    #remove the actual guessed word if it's still in the list (shouldn't be, but has happened in testing)
+    final_list <- filtered_list[filtered_list != word] 
     final_list
 }
 
@@ -110,7 +117,7 @@ play_wordle <- function(correct_word) {
 
 
 ### loop to play wordle across a bunch of words
-wordle_play_list <- all_wordles[69:420]
+wordle_play_list <- all_wordles
 games <- data.frame(target = c(), guess = c(), score = c())
 
 t1 <- Sys.time()
@@ -136,11 +143,19 @@ win_tally <- results %>%
     arrange(rounds, desc = T) %>%
     mutate(rounds = ifelse(win == 1, as.character(rounds), "loss")) %>%
     tally() %>%
-    mutate(percent = n/sum(n)) %>%  
+    mutate(percent = sprintf("%.1f", n/sum(n)*100)) %>%  
     select(rounds, percent)
 
+avg_guesses <- win_tally %>%
+    filter(rounds != 'loss') %>%
+    mutate(rounds = as.integer(rounds),
+           percent = as.double(percent)) %>%
+    mutate(sumprod = rounds * percent)
+
+avg_guess <- sum(avg_guesses$sumprod) / sum(avg_guesses$percent)
 
 ### display results
 print(paste0(length(wordle_play_list), " wordles completed"))
 print(t2 - t1)
 win_tally
+round(avg_guess,2)

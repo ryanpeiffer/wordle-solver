@@ -12,6 +12,7 @@ I'm aiming to optimize for:
 
 Runtime is based on completing the full list of 2314 Wordles.
 
-|algorithm |runtime |solve % |avg guesses
-|:---: | :---: | :---:| :---:|
-|v1|6.2 min|80.7%|4.56
+|algorithm |runtime |solve % |avg guesses |description
+|:---: | :---: | :---:| :---:| :---:|
+|v1|6.2 min|80.7%|4.56|initial build
+|v2|5.7 min|95.9%|4.12|add filtering of imperfect letters
